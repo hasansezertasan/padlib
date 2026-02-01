@@ -1,0 +1,410 @@
+# left-pad Test Suite
+# Language-agnostic test cases for the left-pad library
+# Each test specifies: function, input, expected output, and description
+
+version: "1.0.0"
+
+# =============================================================================
+# left_pad tests
+# =============================================================================
+
+left_pad:
+  # Basic padding
+  - input: ["foo", 5]
+    expected: "  foo"
+    description: "Basic left pad with spaces"
+
+  - input: ["foo", 5, "-"]
+    expected: "--foo"
+    description: "Left pad with custom character"
+
+  - input: ["hello", 10]
+    expected: "     hello"
+    description: "Pad to 10 characters"
+
+  - input: ["x", 1]
+    expected: "x"
+    description: "No padding needed (exact length)"
+
+  - input: ["abc", 3]
+    expected: "abc"
+    description: "No padding needed (exact length)"
+
+  # String already exceeds target
+  - input: ["foobar", 5]
+    expected: "foobar"
+    description: "String longer than target length"
+
+  - input: ["hello world", 5]
+    expected: "hello world"
+    description: "Long string unchanged"
+
+  # Multi-character fill
+  - input: ["foo", 5, "ab"]
+    expected: "abfoo"
+    description: "Two-character fill pattern"
+
+  - input: ["foo", 10, "abc"]
+    expected: "abcabcafoo"
+    description: "Three-character fill pattern (truncated)"
+
+  - input: ["x", 7, "123"]
+    expected: "123123x"
+    description: "Repeating pattern"
+
+  - input: ["hi", 8, "XY"]
+    expected: "XYXYXYhi"
+    description: "Even pattern repetition"
+
+  # Empty string input
+  - input: ["", 3]
+    expected: "   "
+    description: "Empty string padded with spaces"
+
+  - input: ["", 5, "-"]
+    expected: "-----"
+    description: "Empty string padded with dashes"
+
+  - input: ["", 0]
+    expected: ""
+    description: "Empty string, zero length"
+
+  # Edge cases
+  - input: ["x", 0]
+    expected: "x"
+    description: "Zero target length"
+
+  - input: ["x", -5]
+    expected: "x"
+    description: "Negative target length"
+
+  - input: ["test", 4]
+    expected: "test"
+    description: "Exact length match"
+
+  # Whitespace handling
+  - input: ["  ", 5]
+    expected: "     "
+    description: "Pad string that's already spaces"
+
+  - input: [" a ", 6]
+    expected: "    a "
+    description: "Pad string with leading/trailing spaces"
+
+  # Numbers as strings
+  - input: ["42", 5]
+    expected: "   42"
+    description: "Numeric string"
+
+  - input: ["3.14", 7]
+    expected: "   3.14"
+    description: "Decimal number string"
+
+# =============================================================================
+# right_pad tests
+# =============================================================================
+
+right_pad:
+  # Basic padding
+  - input: ["foo", 5]
+    expected: "foo  "
+    description: "Basic right pad with spaces"
+
+  - input: ["foo", 5, "-"]
+    expected: "foo--"
+    description: "Right pad with custom character"
+
+  - input: ["hello", 10]
+    expected: "hello     "
+    description: "Pad to 10 characters"
+
+  # String already exceeds target
+  - input: ["foobar", 5]
+    expected: "foobar"
+    description: "String longer than target length"
+
+  # Multi-character fill
+  - input: ["foo", 5, "ab"]
+    expected: "fooab"
+    description: "Two-character fill pattern"
+
+  - input: ["foo", 10, "abc"]
+    expected: "fooabcabca"
+    description: "Three-character fill pattern (truncated)"
+
+  # Empty string input
+  - input: ["", 3]
+    expected: "   "
+    description: "Empty string padded with spaces"
+
+  - input: ["", 5, "-"]
+    expected: "-----"
+    description: "Empty string padded with dashes"
+
+  # Edge cases
+  - input: ["x", 0]
+    expected: "x"
+    description: "Zero target length"
+
+  - input: ["x", -5]
+    expected: "x"
+    description: "Negative target length"
+
+  - input: ["test", 4]
+    expected: "test"
+    description: "Exact length match"
+
+# =============================================================================
+# center_pad tests
+# =============================================================================
+
+center_pad:
+  # Basic centering (even padding)
+  - input: ["foo", 7]
+    expected: "  foo  "
+    description: "Center with even padding"
+
+  - input: ["x", 5]
+    expected: "  x  "
+    description: "Single char centered"
+
+  - input: ["ab", 6]
+    expected: "  ab  "
+    description: "Two chars centered"
+
+  # Odd padding (extra goes right)
+  - input: ["foo", 8]
+    expected: "  foo   "
+    description: "Odd padding - extra space on right"
+
+  - input: ["foo", 6]
+    expected: " foo  "
+    description: "Odd padding - 1 left, 2 right"
+
+  - input: ["x", 4]
+    expected: " x  "
+    description: "Single char, odd total"
+
+  # Custom fill character
+  - input: ["foo", 7, "-"]
+    expected: "--foo--"
+    description: "Center with dashes"
+
+  - input: ["foo", 8, "-"]
+    expected: "--foo---"
+    description: "Odd padding with dashes"
+
+  # Multi-character fill
+  - input: ["ab", 6, "xy"]
+    expected: "xyabxy"
+    description: "Two-char fill centered"
+
+  - input: ["x", 7, "abc"]
+    expected: "abcxabc"
+    description: "Three-char fill centered"
+
+  # String already exceeds target
+  - input: ["foobar", 5]
+    expected: "foobar"
+    description: "String longer than target"
+
+  # Empty string
+  - input: ["", 4]
+    expected: "    "
+    description: "Empty string centered"
+
+  # Edge cases
+  - input: ["test", 4]
+    expected: "test"
+    description: "Exact length match"
+
+  - input: ["x", 1]
+    expected: "x"
+    description: "Single char, target 1"
+
+# =============================================================================
+# pad tests (general function)
+# =============================================================================
+
+pad:
+  # Default (left)
+  - input: ["foo", 5]
+    expected: "  foo"
+    description: "Default position is left"
+
+  # Explicit left
+  - input: ["foo", 5, " ", "left"]
+    expected: "  foo"
+    description: "Explicit left position"
+
+  - input: ["foo", 5, "-", "left"]
+    expected: "--foo"
+    description: "Left with custom char"
+
+  # Explicit right
+  - input: ["foo", 5, " ", "right"]
+    expected: "foo  "
+    description: "Explicit right position"
+
+  - input: ["foo", 5, "-", "right"]
+    expected: "foo--"
+    description: "Right with custom char"
+
+  # Explicit center
+  - input: ["foo", 7, " ", "center"]
+    expected: "  foo  "
+    description: "Explicit center position"
+
+  - input: ["foo", 7, "-", "center"]
+    expected: "--foo--"
+    description: "Center with custom char"
+
+  # Mixed cases
+  - input: ["hello", 10, ".", "left"]
+    expected: ".....hello"
+    description: "Left pad with dots"
+
+  - input: ["hello", 10, ".", "right"]
+    expected: "hello....."
+    description: "Right pad with dots"
+
+  - input: ["hi", 8, ".", "center"]
+    expected: "...hi..."
+    description: "Center pad with dots"
+
+# =============================================================================
+# zero_pad tests
+# =============================================================================
+
+zero_pad:
+  # Basic zero padding
+  - input: [5, 3]
+    expected: "005"
+    description: "Single digit to 3"
+
+  - input: [42, 5]
+    expected: "00042"
+    description: "Two digits to 5"
+
+  - input: [123, 5]
+    expected: "00123"
+    description: "Three digits to 5"
+
+  - input: [7, 4]
+    expected: "0007"
+    description: "Single digit to 4"
+
+  # Already exceeds length
+  - input: [12345, 3]
+    expected: "12345"
+    description: "Number exceeds target length"
+
+  - input: [100, 2]
+    expected: "100"
+    description: "Three digits, target 2"
+
+  # Zero
+  - input: [0, 3]
+    expected: "000"
+    description: "Zero padded"
+
+  - input: [0, 1]
+    expected: "0"
+    description: "Zero, target 1"
+
+  # Negative numbers
+  - input: [-5, 4]
+    expected: "-005"
+    description: "Negative single digit"
+
+  - input: [-42, 5]
+    expected: "-0042"
+    description: "Negative two digits"
+
+  - input: [-123, 4]
+    expected: "-123"
+    description: "Negative, exact length"
+
+  - input: [-7, 6]
+    expected: "-00007"
+    description: "Negative to 6 chars"
+
+  # String input
+  - input: ["7", 4]
+    expected: "0007"
+    description: "String input accepted"
+
+  - input: ["42", 5]
+    expected: "00042"
+    description: "String number"
+
+  # Floats
+  - input: [3.14, 6]
+    expected: "003.14"
+    description: "Float padded"
+
+  - input: [0.5, 4]
+    expected: "00.5"
+    description: "Float less than 1"
+
+  - input: [-3.14, 7]
+    expected: "-003.14"
+    description: "Negative float"
+
+# =============================================================================
+# Unicode tests (apply to all padding functions)
+# =============================================================================
+
+unicode:
+  left_pad:
+    - input: ["\U0001F600", 3]
+      expected: "  \U0001F600"
+      description: "Emoji counts as 1 character"
+
+    - input: ["caf\u00E9", 6]
+      expected: "  caf\u00E9"
+      description: "Accented character"
+
+    - input: ["\u65E5\u672C\u8A9E", 5]
+      expected: "  \u65E5\u672C\u8A9E"
+      description: "Japanese characters"
+
+    - input: ["\u4E2D\u6587", 4, "-"]
+      expected: "--\u4E2D\u6587"
+      description: "Chinese character with dash padding"
+
+  right_pad:
+    - input: ["\U0001F600", 3]
+      expected: "\U0001F600  "
+      description: "Emoji counts as 1 character"
+
+    - input: ["caf\u00E9", 6]
+      expected: "caf\u00E9  "
+      description: "Accented character"
+
+  center_pad:
+    - input: ["\U0001F600", 5]
+      expected: "  \U0001F600  "
+      description: "Emoji centered"
+
+    - input: ["\u6F22", 5]
+      expected: "  \u6F22  "
+      description: "Kanji centered"
+
+# =============================================================================
+# Error cases (should raise errors)
+# =============================================================================
+
+errors:
+  pad:
+    - input: ["foo", 5, " ", "invalid"]
+      error: true
+      description: "Invalid position should raise error"
+
+    - input: ["foo", 5, " ", "LEFT"]
+      error: true
+      description: "Case-sensitive position (uppercase invalid)"
+
+    - input: ["foo", 5, " ", ""]
+      error: true
+      description: "Empty position string"

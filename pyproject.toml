@@ -1,0 +1,10 @@
+[project]
+name = "padlib"
+version = "0.1.0"
+description = "A string padding library, with no code. Spec-only, generate your own implementation."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "pytest>=9.0.2",
+    "pyyaml>=6.0.3",
+]
