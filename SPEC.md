@@ -1,10 +1,20 @@
-# padlib Specification
+# padlib Specification v0.1.0
 
 This document describes the behavior of the `padlib` library. Any implementation must conform to this specification and pass all tests in `tests.yaml`.
 
 ## Overview
 
-`padlib` provides string padding utilities. It handles padding strings to a target length with customizable fill characters, supporting left, right, and center alignment.
+`padlib` provides string padding utilities: pad strings to a target length with customizable fill characters, supporting left, right, and center alignment.
+
+## Design Principles
+
+1. **Pure functions.** No side effects, no I/O, no mutable state. Every function takes inputs and returns a new string.
+
+2. **UTF-8 strings.** String length is measured by characters (code points), not bytes.
+
+3. **Deterministic.** Given the same inputs, a function always returns the same output.
+
+4. **Simple and focused.** Each function does one thing. No configuration files, no global state.
 
 ## Functions
 
@@ -15,8 +25,6 @@ The library provides five functions:
 3. `center_pad(string, length, fill_char)` - Center the string
 4. `pad(string, length, fill_char, position)` - General-purpose padding
 5. `zero_pad(number, length)` - Pad numbers with leading zeros
-
----
 
 ## Function: `left_pad`
 
@@ -64,8 +72,6 @@ left_pad("x", -5)          -> "x"
 - Unicode: Measure length by characters (code points), not bytes
 - Null/None input: Convert to empty string first
 
----
-
 ## Function: `right_pad`
 
 Pads a string on the right side to reach a target length.
@@ -99,8 +105,6 @@ right_pad("foo", 10, "abc") -> "fooabcabca"
 right_pad("", 3)            -> "   "
 ```
 
----
-
 ## Function: `center_pad`
 
 Centers a string within a target length, padding both sides.
@@ -122,6 +126,7 @@ Same as `left_pad`.
 3. Left padding: `floor(total_padding / 2)`
 4. Right padding: `ceil(total_padding / 2)` (extra character goes on right)
 5. Apply padding on both sides
+6. Multi-character fill patterns: Each side starts its own pattern from the beginning (left side gets the pattern, right side independently gets the pattern)
 
 ### Examples
 
@@ -138,8 +143,6 @@ center_pad("ab", 6, "xyz")   -> "xyabxy"  # Pattern applied to both sides
 
 - Odd padding amount: Extra character goes on the right side
 - Multi-char fill: Each side gets its own pattern application
-
----
 
 ## Function: `pad`
 
@@ -180,8 +183,6 @@ pad("foo", 7, "-", "center")     -> "--foo--"
 pad("foo", 5, position="right")  -> "foo  "  # Named argument
 ```
 
----
-
 ## Function: `zero_pad`
 
 Pads numbers with leading zeros. Convenience function for common use case.
@@ -202,8 +203,11 @@ zero_pad(number, length) -> string
 ### Behavior
 
 1. Convert `number` to string if needed
-2. If number is negative, preserve the sign and pad the digits
-3. Apply `left_pad` with `fill_char='0'`
+2. If the string starts with `-`:
+   - Separate the minus sign from the digits
+   - Apply `left_pad` to the digits with `fill_char='0'` and `length - 1` (accounting for the sign)
+   - Prepend the `-` sign to the result
+3. Otherwise, apply `left_pad` with `fill_char='0'` and the given `length`
 
 ### Examples
 
@@ -220,18 +224,17 @@ zero_pad(3.14, 6)   -> "003.14" # Floats: pad the whole representation
 ### Edge Cases
 
 - Negative numbers: Pad after the minus sign (e.g., `-5` with length 4 -> `-005`)
-- Floats: Treat decimal point and decimals as part of the string
+- Floats: Convert to string using the language's default conversion (should use period `.` as decimal separator), then pad the entire result including decimal point
 - String input: Accept strings that represent numbers
-
----
+- Scientific notation: Only supported as string input (e.g., `"1e-5"`); numeric values with scientific notation use language default string conversion
 
 ## Unicode Handling
 
 All functions measure string length by **characters (code points)**, not bytes.
 
 ```
-left_pad("", 3)     -> "  "   # emoji is 1 character
-left_pad("caf", 6)    -> "  caf"  # accent is 1 character
+left_pad("😊", 3)     -> "  😊"   # emoji is 1 character
+left_pad("café", 6)    -> "  café"  # accent is 1 character
 ```
 
 For languages with different string models:
@@ -240,7 +243,7 @@ For languages with different string models:
 - JavaScript: Use `[...string].length` for accurate count
 - Rust: Use `.chars().count()`
 
----
+**Note on Unicode normalization:** Strings are measured as-is without normalization. For example, "café" can be 4 code points (caf + é) or 5 (caf + e + combining accent) depending on normalization form. Implementations should not normalize input strings before measuring length.
 
 ## Error Handling
 
@@ -260,29 +263,12 @@ These conditions should be handled gracefully:
 3. Empty fill character: Return string unchanged
 4. Non-string input for `string`: Convert to string first
 
----
-
 ## Implementation Notes
 
-### Performance
+For typical use cases (strings under 1000 characters, padding under 100 characters), performance is not critical. Simple string concatenation is sufficient.
 
-For typical use cases (strings under 1000 characters, padding under 100 characters), performance is not critical. Implementations may use simple string concatenation.
-
-For high-performance needs, consider:
-
-- Pre-allocating the result buffer
-- Avoiding repeated string concatenation in loops
-
-### Thread Safety
-
-All functions should be pure (no side effects) and thread-safe.
-
-### Immutability
-
-Input strings should never be modified. Always return a new string.
-
----
+For high-performance needs, consider pre-allocating the result buffer and avoiding repeated concatenation in loops.
 
 ## Changelog
 
-- **v1.0.0** (2026-01-19): Initial specification
+- **v0.1.0** (2026-02-08): Initial specification

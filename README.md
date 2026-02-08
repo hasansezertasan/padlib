@@ -1,16 +1,16 @@
 # padlib
 
-A string padding library, with no code.
+A string padding library with no code.
 
 ## What is this?
 
-`padlib` is a string padding utility library that contains **no executable code**. Instead, it contains:
+`padlib` is a **ghost library**: it ships a specification and test cases instead of executable code. You give these files to an AI coding assistant, tell it what language you need, and it generates a working implementation locally.
 
-- **SPEC.md** - A detailed specification of how the library should behave
-- **tests.yaml** - Language-agnostic test cases as input/output pairs
-- **INSTALL.md** - Instructions for generating an implementation
+The repository contains three files:
 
-Pass these files to your AI coding assistant of choice, tell it what language you need, and it will generate a working implementation that passes all tests.
+- **SPEC.md** -- Complete behavioral specification
+- **tests.yaml** -- 111 language-agnostic test cases as input/output pairs
+- **INSTALL.md** -- Instructions for generating an implementation
 
 ## Functions
 
@@ -22,28 +22,15 @@ Pass these files to your AI coding assistant of choice, tell it what language yo
 | `pad`        | General-purpose padding with position control       |
 | `zero_pad`   | Pads numbers with leading zeros                     |
 
-## Supported Languages
+## Language Support
 
-This library has been tested with:
-
-- Python
-- JavaScript/TypeScript
-- Ruby
-- Rust
-- Go
-- Elixir
-- PHP
-- Bash
-
-It probably works in other languages too. Those are just the ones we've tried.
+Any language an AI coding assistant can target. Verified with Python.
 
 ## Why?
 
-In 2016, an 11-line npm package called `left-pad` was unpublished, breaking thousands of projects including Node.js and Babel. This incident highlighted how fragile dependency chains had become.
+In 2016, an 11-line npm package called `left-pad` was unpublished, breaking thousands of projects including Node.js and Babel. The incident showed how fragile dependency chains had become.
 
-With modern AI coding agents, we can take a different approach: instead of depending on someone else's implementation, we define the **behavior** we need and generate the implementation ourselves.
-
-No supply chain. No dependency hell. No breaking changes. Just a spec and tests.
+Ghost libraries take a different approach: instead of depending on someone else's implementation, you define the **behavior** you need and generate the implementation locally. No supply chain. No dependency conflicts. No breaking changes. Just a spec and tests.
 
 ## Installation
 
@@ -64,6 +51,6 @@ MIT License. See [LICENSE](LICENSE).
 ## Inspired By
 
 - [A Software Library with No Code](https://www.dbreunig.com/2026/01/08/a-software-library-with-no-code.html) and [whenwords](https://github.com/dbreunig/whenwords) by Drew Breunig
-- [Porting MiniJinja to Go With an Agent](https://lucumr.pocoo.org/2026/1/14/minijinja-go-port/) by Armin Ronacher — my take: language-agnostic testing tools are more valuable than ever
-- [I don't really use libraries anymore](https://www.youtube.com/watch?v=u9P3CKwtRnM) by Theo — my take: AI can easily write and maintain small scripts, the things Theo said in this video really stuck with me!
+- [Porting MiniJinja to Go With an Agent](https://lucumr.pocoo.org/2026/1/14/minijinja-go-port/) by Armin Ronacher -- language-agnostic testing tools are more valuable than ever
+- [I don't really use libraries anymore](https://www.youtube.com/watch?v=u9P3CKwtRnM) by Theo -- AI can write and maintain small utilities, removing the need to depend on third-party packages
 - The original [left-pad incident](https://www.theregister.com/2016/03/23/npm_left_pad_chaos/)
