@@ -1,0 +1,645 @@
+# padlib Test Suite
+# Language-agnostic test cases -- each test has input parameters and expected output
+# See SPEC.md for the complete behavioral specification
+
+version: "0.1.0"
+
+# =============================================================================
+# left_pad tests
+# =============================================================================
+
+left_pad:
+  # Basic padding
+  - name: "basic-space-padding"
+    input: ["foo", 5]
+    output: "  foo"
+    description: "Basic left pad with spaces"
+
+  - name: "custom-char-padding"
+    input: ["foo", 5, "-"]
+    output: "--foo"
+    description: "Left pad with custom character"
+
+  - name: "pad-to-ten"
+    input: ["hello", 10]
+    output: "     hello"
+    description: "Pad to 10 characters"
+
+  - name: "exact-length-no-padding-1"
+    input: ["x", 1]
+    output: "x"
+    description: "No padding needed (exact length)"
+
+  - name: "exact-length-no-padding-2"
+    input: ["abc", 3]
+    output: "abc"
+    description: "No padding needed (exact length)"
+
+  # String already exceeds target
+  - name: "string-exceeds-target"
+    input: ["foobar", 5]
+    output: "foobar"
+    description: "String longer than target length"
+
+  - name: "long-string-unchanged"
+    input: ["hello world", 5]
+    output: "hello world"
+    description: "Long string unchanged"
+
+  # Multi-character fill
+  - name: "two-char-fill-pattern"
+    input: ["foo", 5, "ab"]
+    output: "abfoo"
+    description: "Two-character fill pattern"
+
+  - name: "three-char-fill-truncated"
+    input: ["foo", 10, "abc"]
+    output: "abcabcafoo"
+    description: "Three-character fill pattern (truncated)"
+
+  - name: "repeating-pattern-123"
+    input: ["x", 7, "123"]
+    output: "123123x"
+    description: "Repeating pattern"
+
+  - name: "even-pattern-repetition"
+    input: ["hi", 8, "XY"]
+    output: "XYXYXYhi"
+    description: "Even pattern repetition"
+
+  # Empty string input
+  - name: "empty-string-spaces"
+    input: ["", 3]
+    output: "   "
+    description: "Empty string padded with spaces"
+
+  - name: "empty-string-dashes"
+    input: ["", 5, "-"]
+    output: "-----"
+    description: "Empty string padded with dashes"
+
+  - name: "empty-string-zero-length"
+    input: ["", 0]
+    output: ""
+    description: "Empty string, zero length"
+
+  # Edge cases
+  - name: "zero-target-length"
+    input: ["x", 0]
+    output: "x"
+    description: "Zero target length"
+
+  - name: "negative-target-length"
+    input: ["x", -5]
+    output: "x"
+    description: "Negative target length"
+
+  - name: "exact-match"
+    input: ["test", 4]
+    output: "test"
+    description: "Exact length match"
+
+  # Whitespace handling
+  - name: "pad-spaces-with-spaces"
+    input: ["  ", 5]
+    output: "     "
+    description: "Pad string that's already spaces"
+
+  - name: "pad-with-leading-trailing-spaces"
+    input: [" a ", 6]
+    output: "    a "
+    description: "Pad string with leading/trailing spaces"
+
+  # Numbers as strings
+  - name: "numeric-string"
+    input: ["42", 5]
+    output: "   42"
+    description: "Numeric string"
+
+  - name: "decimal-string"
+    input: ["3.14", 7]
+    output: "   3.14"
+    description: "Decimal number string"
+
+  # Empty fill character
+  - name: "empty-fill-char"
+    input: ["foo", 10, ""]
+    output: "foo"
+    description: "Empty fill character returns string unchanged"
+
+  # Null input handling
+  - name: "null-input"
+    input: [null, 3]
+    output: "   "
+    description: "Null input treated as empty string"
+
+  # Non-string input conversion
+  - name: "number-input-converted"
+    input: [123, 6]
+    output: "   123"
+    description: "Number input converted to string"
+
+  - name: "boolean-input-converted"
+    input: [true, 6]
+    output: "  true"
+    description: "Boolean input converted to string"
+
+  - name: "float-input-converted"
+    input: [3.14, 7]
+    output: "   3.14"
+    description: "Float input converted to string"
+
+# =============================================================================
+# right_pad tests
+# =============================================================================
+
+right_pad:
+  # Basic padding
+  - name: "basic-space-padding"
+    input: ["foo", 5]
+    output: "foo  "
+    description: "Basic right pad with spaces"
+
+  - name: "custom-char-padding"
+    input: ["foo", 5, "-"]
+    output: "foo--"
+    description: "Right pad with custom character"
+
+  - name: "pad-to-ten"
+    input: ["hello", 10]
+    output: "hello     "
+    description: "Pad to 10 characters"
+
+  # String already exceeds target
+  - name: "string-exceeds-target"
+    input: ["foobar", 5]
+    output: "foobar"
+    description: "String longer than target length"
+
+  # Multi-character fill
+  - name: "two-char-fill-pattern"
+    input: ["foo", 5, "ab"]
+    output: "fooab"
+    description: "Two-character fill pattern"
+
+  - name: "three-char-fill-truncated"
+    input: ["foo", 10, "abc"]
+    output: "fooabcabca"
+    description: "Three-character fill pattern (truncated)"
+
+  # Empty string input
+  - name: "empty-string-spaces"
+    input: ["", 3]
+    output: "   "
+    description: "Empty string padded with spaces"
+
+  - name: "empty-string-dashes"
+    input: ["", 5, "-"]
+    output: "-----"
+    description: "Empty string padded with dashes"
+
+  # Edge cases
+  - name: "zero-target-length"
+    input: ["x", 0]
+    output: "x"
+    description: "Zero target length"
+
+  - name: "negative-target-length"
+    input: ["x", -5]
+    output: "x"
+    description: "Negative target length"
+
+  - name: "exact-match"
+    input: ["test", 4]
+    output: "test"
+    description: "Exact length match"
+
+  # Empty fill character
+  - name: "empty-fill-char"
+    input: ["foo", 10, ""]
+    output: "foo"
+    description: "Empty fill character returns string unchanged"
+
+  # Null input handling
+  - name: "null-input"
+    input: [null, 3]
+    output: "   "
+    description: "Null input treated as empty string"
+
+# =============================================================================
+# center_pad tests
+# =============================================================================
+
+center_pad:
+  # Basic centering (even padding)
+  - name: "even-padding"
+    input: ["foo", 7]
+    output: "  foo  "
+    description: "Center with even padding"
+
+  - name: "single-char-centered"
+    input: ["x", 5]
+    output: "  x  "
+    description: "Single char centered"
+
+  - name: "two-chars-centered"
+    input: ["ab", 6]
+    output: "  ab  "
+    description: "Two chars centered"
+
+  # Odd padding (extra goes right)
+  - name: "odd-padding-extra-right"
+    input: ["foo", 8]
+    output: "  foo   "
+    description: "Odd padding - extra space on right"
+
+  - name: "odd-padding-1-left-2-right"
+    input: ["foo", 6]
+    output: " foo  "
+    description: "Odd padding - 1 left, 2 right"
+
+  - name: "single-char-odd-total"
+    input: ["x", 4]
+    output: " x  "
+    description: "Single char, odd total"
+
+  # Custom fill character
+  - name: "center-with-dashes"
+    input: ["foo", 7, "-"]
+    output: "--foo--"
+    description: "Center with dashes"
+
+  - name: "odd-padding-with-dashes"
+    input: ["foo", 8, "-"]
+    output: "--foo---"
+    description: "Odd padding with dashes"
+
+  # Multi-character fill
+  - name: "two-char-fill-centered"
+    input: ["ab", 6, "xy"]
+    output: "xyabxy"
+    description: "Two-char fill centered"
+
+  - name: "three-char-fill-centered"
+    input: ["x", 7, "abc"]
+    output: "abcxabc"
+    description: "Three-char fill centered"
+
+  # String already exceeds target
+  - name: "string-exceeds-target"
+    input: ["foobar", 5]
+    output: "foobar"
+    description: "String longer than target"
+
+  # Empty string
+  - name: "empty-string-centered"
+    input: ["", 4]
+    output: "    "
+    description: "Empty string centered"
+
+  # Edge cases
+  - name: "exact-match"
+    input: ["test", 4]
+    output: "test"
+    description: "Exact length match"
+
+  - name: "single-char-target-1"
+    input: ["x", 1]
+    output: "x"
+    description: "Single char, target 1"
+
+  # Empty fill character
+  - name: "empty-fill-char"
+    input: ["foo", 10, ""]
+    output: "foo"
+    description: "Empty fill character returns string unchanged"
+
+  # Null input handling
+  - name: "null-input"
+    input: [null, 4]
+    output: "    "
+    description: "Null input treated as empty string"
+
+# =============================================================================
+# pad tests (general function)
+# =============================================================================
+
+pad:
+  # Default (left)
+  - name: "default-position-left"
+    input: ["foo", 5]
+    output: "  foo"
+    description: "Default position is left"
+
+  # Explicit left
+  - name: "explicit-left-position"
+    input: ["foo", 5, " ", "left"]
+    output: "  foo"
+    description: "Explicit left position"
+
+  - name: "left-custom-char"
+    input: ["foo", 5, "-", "left"]
+    output: "--foo"
+    description: "Left with custom char"
+
+  # Explicit right
+  - name: "explicit-right-position"
+    input: ["foo", 5, " ", "right"]
+    output: "foo  "
+    description: "Explicit right position"
+
+  - name: "right-custom-char"
+    input: ["foo", 5, "-", "right"]
+    output: "foo--"
+    description: "Right with custom char"
+
+  # Explicit center
+  - name: "explicit-center-position"
+    input: ["foo", 7, " ", "center"]
+    output: "  foo  "
+    description: "Explicit center position"
+
+  - name: "center-custom-char"
+    input: ["foo", 7, "-", "center"]
+    output: "--foo--"
+    description: "Center with custom char"
+
+  # Mixed cases
+  - name: "left-pad-dots"
+    input: ["hello", 10, ".", "left"]
+    output: ".....hello"
+    description: "Left pad with dots"
+
+  - name: "right-pad-dots"
+    input: ["hello", 10, ".", "right"]
+    output: "hello....."
+    description: "Right pad with dots"
+
+  - name: "center-pad-dots"
+    input: ["hi", 8, ".", "center"]
+    output: "...hi..."
+    description: "Center pad with dots"
+
+  # Empty fill character
+  - name: "empty-fill-char-left"
+    input: ["foo", 10, "", "left"]
+    output: "foo"
+    description: "Empty fill character with left position"
+
+  # Null input handling
+  - name: "null-input"
+    input: [null, 3]
+    output: "   "
+    description: "Null input treated as empty string"
+
+# =============================================================================
+# zero_pad tests
+# =============================================================================
+
+zero_pad:
+  # Basic zero padding
+  - name: "single-digit-to-3"
+    input: [5, 3]
+    output: "005"
+    description: "Single digit to 3"
+
+  - name: "two-digits-to-5"
+    input: [42, 5]
+    output: "00042"
+    description: "Two digits to 5"
+
+  - name: "three-digits-to-5"
+    input: [123, 5]
+    output: "00123"
+    description: "Three digits to 5"
+
+  - name: "single-digit-to-4"
+    input: [7, 4]
+    output: "0007"
+    description: "Single digit to 4"
+
+  # Already exceeds length
+  - name: "number-exceeds-target"
+    input: [12345, 3]
+    output: "12345"
+    description: "Number exceeds target length"
+
+  - name: "three-digits-target-2"
+    input: [100, 2]
+    output: "100"
+    description: "Three digits, target 2"
+
+  # Zero
+  - name: "zero-padded"
+    input: [0, 3]
+    output: "000"
+    description: "Zero padded"
+
+  - name: "zero-target-1"
+    input: [0, 1]
+    output: "0"
+    description: "Zero, target 1"
+
+  # Negative numbers
+  - name: "negative-single-digit"
+    input: [-5, 4]
+    output: "-005"
+    description: "Negative single digit"
+
+  - name: "negative-two-digits"
+    input: [-42, 5]
+    output: "-0042"
+    description: "Negative two digits"
+
+  - name: "negative-exact-length"
+    input: [-123, 4]
+    output: "-123"
+    description: "Negative, exact length"
+
+  - name: "negative-to-6-chars"
+    input: [-7, 6]
+    output: "-00007"
+    description: "Negative to 6 chars"
+
+  # String input
+  - name: "string-input-accepted"
+    input: ["7", 4]
+    output: "0007"
+    description: "String input accepted"
+
+  - name: "string-number"
+    input: ["42", 5]
+    output: "00042"
+    description: "String number"
+
+  # Floats
+  - name: "float-padded"
+    input: [3.14, 6]
+    output: "003.14"
+    description: "Float padded"
+
+  - name: "float-less-than-1"
+    input: [0.5, 4]
+    output: "00.5"
+    description: "Float less than 1"
+
+  - name: "negative-float"
+    input: [-3.14, 7]
+    output: "-003.14"
+    description: "Negative float"
+
+  # Large numbers
+  - name: "very-large-number"
+    input: [9999999999, 5]
+    output: "9999999999"
+    description: "Very large number exceeds target"
+
+  - name: "large-number-padded"
+    input: [123456789, 12]
+    output: "000123456789"
+    description: "Large number padded"
+
+  # Scientific notation (string representation)
+  - name: "scientific-notation-small"
+    input: ["1e-5", 8]
+    output: "00001e-5"
+    description: "Scientific notation string"
+
+  - name: "scientific-notation-large"
+    input: ["2.5e10", 10]
+    output: "00002.5e10"
+    description: "Large scientific notation"
+
+  # Null input handling
+  - name: "null-input"
+    input: [null, 3]
+    output: "000"
+    description: "Null input treated as empty string, then zero-padded"
+
+# =============================================================================
+# Unicode tests (apply to all padding functions)
+# =============================================================================
+
+unicode:
+  left_pad:
+    - name: "emoji-as-1-character"
+      input: ["\U0001F600", 3]
+      output: "  \U0001F600"
+      description: "Emoji counts as 1 character"
+
+    - name: "accented-character"
+      input: ["café", 6]
+      output: "  café"
+      description: "Accented character"
+
+    - name: "japanese-characters"
+      input: ["日本語", 5]
+      output: "  日本語"
+      description: "Japanese characters"
+
+    - name: "chinese-dash-padding"
+      input: ["中文", 4, "-"]
+      output: "--中文"
+      description: "Chinese character with dash padding"
+
+    - name: "unicode-arrow-fill"
+      input: ["x", 5, "→"]
+      output: "→→→→x"
+      description: "Unicode arrow as fill character"
+
+    - name: "heart-symbol-fill"
+      input: ["hi", 6, "♥"]
+      output: "♥♥♥♥hi"
+      description: "Heart symbol as fill"
+
+    - name: "emoji-as-fill"
+      input: ["test", 8, "💡"]
+      output: "💡💡💡💡test"
+      description: "Emoji as fill character"
+
+  right_pad:
+    - name: "emoji-as-1-character"
+      input: ["\U0001F600", 3]
+      output: "\U0001F600  "
+      description: "Emoji counts as 1 character"
+
+    - name: "accented-character"
+      input: ["café", 6]
+      output: "café  "
+      description: "Accented character"
+
+  center_pad:
+    - name: "emoji-centered"
+      input: ["\U0001F600", 5]
+      output: "  \U0001F600  "
+      description: "Emoji centered"
+
+    - name: "kanji-centered"
+      input: ["漢", 5]
+      output: "  漢  "
+      description: "Kanji centered"
+
+# =============================================================================
+# Error cases (should raise errors)
+# =============================================================================
+
+errors:
+  pad:
+    - name: "invalid-position"
+      input: ["foo", 5, " ", "invalid"]
+      error: true
+      description: "Invalid position should raise error"
+
+    - name: "case-sensitive-position"
+      input: ["foo", 5, " ", "LEFT"]
+      error: true
+      description: "Case-sensitive position (uppercase invalid)"
+
+    - name: "empty-position-string"
+      input: ["foo", 5, " ", ""]
+      error: true
+      description: "Empty position string"
+
+  left_pad:
+    - name: "non-integer-length"
+      input: ["foo", "five"]
+      error: true
+      description: "Non-integer length should raise error"
+
+    - name: "float-length"
+      input: ["foo", 5.5]
+      error: true
+      description: "Float length should raise error"
+
+  right_pad:
+    - name: "non-integer-length"
+      input: ["foo", "five"]
+      error: true
+      description: "Non-integer length should raise error"
+
+    - name: "float-length"
+      input: ["foo", 5.5]
+      error: true
+      description: "Float length should raise error"
+
+  center_pad:
+    - name: "non-integer-length"
+      input: ["foo", "five"]
+      error: true
+      description: "Non-integer length should raise error"
+
+    - name: "float-length"
+      input: ["foo", 5.5]
+      error: true
+      description: "Float length should raise error"
+
+  zero_pad:
+    - name: "non-integer-length"
+      input: [42, "five"]
+      error: true
+      description: "Non-integer length should raise error"
+
+    - name: "float-length"
+      input: [42, 5.5]
+      error: true
+      description: "Float length should raise error"
